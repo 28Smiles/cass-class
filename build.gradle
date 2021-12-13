@@ -1,0 +1,21 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.5.31"
+}
+
+group "de.smiles.cassclass"
+version "0.0.0"
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation group: "com.datastax.oss", name: "java-driver-core", version: "4.13.0"
+    implementation group: "com.datastax.oss", name: "java-driver-query-builder", version: "4.13.0"
+    implementation group: "com.datastax.oss", name: "java-driver-mapper-runtime", version: "4.13.0"
+    implementation group: "org.jetbrains.kotlinx", name: "kotlinx-cli", version: "0.3.4"
+    implementation group: "com.squareup", name: "kotlinpoet", version: "1.8.0"
+    implementation group: "com.github.KenjiOhtsuka", name: "kotlin-case-changer", version: "0.1.1"
+    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.31"
+}
