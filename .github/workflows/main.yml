@@ -20,11 +20,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew shadowJar
       - name: Upload artifacts
-        run: mkdir staging & cp build/libs/cass-class.jar staging-jar
+        run: mkdir staging; cp build/libs/cass-class.jar staging
       - uses: actions/upload-artifact@v2
         with:
           name: package
-          path: staging-jar
+          path: staging
   buildOnLinux:
     runs-on: ubuntu-latest
     steps:
@@ -37,11 +37,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew nativeCompile
       - name: Upload artifacts
-        run: mkdir staging & cp build/native/nativeCompile/cass-class staging-linux
+        run: mkdir staging; cp build/native/nativeCompile/cass-class staging
       - uses: actions/upload-artifact@v2
         with:
           name: package
-          path: staging-linux
+          path: staging
   buildOnWindows:
     runs-on: windows-latest
     steps:
@@ -60,12 +60,12 @@ jobs:
         run: ./gradlew nativeCompile
         shell: powershell
       - name: Upload artifacts
-        run: mkdir staging; cp build/native/nativeCompile/cass-class.exe staging-windows
+        run: mkdir staging; cp build/native/nativeCompile/cass-class.exe staging
         shell: powershell
       - uses: actions/upload-artifact@v2
         with:
           name: package
-          path: staging-windows
+          path: staging
   createRelease:
     runs-on: ubuntu-latest
     needs:
@@ -77,10 +77,10 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: package
-          path: staging-release
+          path: staging
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           automatic_release_tag: latest
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
-          files: staging-release/*
+          files: staging/*
