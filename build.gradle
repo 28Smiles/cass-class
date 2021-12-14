@@ -1,6 +1,7 @@
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.5.31"
     id "org.graalvm.buildtools.native" version "0.9.8"
+    id "com.github.johnrengelman.shadow" version "7.1.0"
     id "application"
 }
 
@@ -14,6 +15,10 @@ repositories {
 
 application {
     mainClass = "de.smiles.cassclass.AppKt"
+}
+
+shadowJar {
+    archiveFileName.set("cass-class.jar")
 }
 
 graalvmNative {
