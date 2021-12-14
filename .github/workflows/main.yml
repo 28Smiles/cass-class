@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  buildOnLinux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 11
+          graalvm-version: 21.3.0
+          native-image: true
+      - name: Build with Gradle
+        run: ./gradlew nativeCompile
+      - name: Upload artifacts
+        run: mkdir staging & cp build/native/nativeCompile/cass-class staging
+      - uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: staging
+  buildOnWindows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ilammy/msvc-dev-cmd@v1.5.0
+      - uses: microsoft/setup-msbuild@v1
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 11
+          graalvm-version: 21.3.0
+          native-image: true
+      - name: Create unistd.h
+        run: cp include\unistd.h $env:VCToolsInstallDir\include
+        shell: powershell
+      - name: Build with Gradle
+        run: ./gradlew nativeCompile
+        shell: powershell
+      - name: Upload artifacts
+        run: mkdir staging; cp build/native/nativeCompile/cass-class.exe staging
+        shell: powershell
+      - uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: staging
+

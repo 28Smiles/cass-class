@@ -1,2 +1,8 @@
-rootProject.name = 'cass-class'
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
 
+rootProject.name = 'cass-class'

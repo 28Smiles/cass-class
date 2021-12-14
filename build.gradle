@@ -1,5 +1,7 @@
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.5.31"
+    id "org.graalvm.buildtools.native" version "0.9.8"
+    id "application"
 }
 
 group "de.smiles.cassclass"
@@ -10,7 +12,22 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+application {
+    mainClass = "de.smiles.cassclass.AppKt"
+}
+
+graalvmNative {
+    binaries {
+        main {
+            buildArgs.add("--allow-incomplete-classpath")
+            buildArgs.add("--report-unsupported-elements-at-runtime")
+            buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory")
+        }
+    }
+}
+
 dependencies {
+    implementation group: "org.lz4", name: "lz4-java", version: "1.8.0"
     implementation group: "com.datastax.oss", name: "java-driver-core", version: "4.13.0"
     implementation group: "com.datastax.oss", name: "java-driver-query-builder", version: "4.13.0"
     implementation group: "com.datastax.oss", name: "java-driver-mapper-runtime", version: "4.13.0"

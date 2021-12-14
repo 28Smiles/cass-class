@@ -1,0 +1,48 @@
+[
+  { "name" : "net.jpountz.lz4.LZ4Compressor" },
+  {
+    "name" : "net.jpountz.lz4.LZ4JNICompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  },
+  {
+    "name" : "net.jpountz.lz4.LZ4JavaSafeCompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  },
+  {
+    "name" : "net.jpountz.lz4.LZ4JavaUnsafeCompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  },
+  {
+    "name" : "net.jpountz.lz4.LZ4HCJavaSafeCompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  },
+  {
+    "name" : "net.jpountz.lz4.LZ4HCJavaUnsafeCompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  },
+  {
+    "name" : "net.jpountz.lz4.LZ4JavaSafeSafeDecompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  },
+  {
+    "name" : "net.jpountz.lz4.LZ4JavaSafeFastDecompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  },
+  {
+    "name" : "net.jpountz.lz4.LZ4JavaUnsafeSafeDecompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  },
+  {
+    "name" : "net.jpountz.lz4.LZ4JavaUnsafeFastDecompressor",
+    "allDeclaredConstructors": true,
+    "allPublicFields": true
+  }
+]

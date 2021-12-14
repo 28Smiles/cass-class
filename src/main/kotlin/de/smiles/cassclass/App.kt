@@ -6,8 +6,10 @@ import com.datastax.oss.driver.api.core.type.ListType
 import com.datastax.oss.driver.api.core.type.MapType
 import com.datastax.oss.driver.api.core.type.SetType
 import com.datastax.oss.driver.api.core.type.UserDefinedType
+import com.datastax.oss.driver.api.mapper.annotations.ClusteringColumn
 import com.datastax.oss.driver.api.mapper.annotations.CqlName
 import com.datastax.oss.driver.api.mapper.annotations.Entity
+import com.datastax.oss.driver.api.mapper.annotations.PartitionKey
 import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy
 import com.datastax.oss.protocol.internal.ProtocolConstants
 import com.improve_future.case_changer.beginWithLowerCase
@@ -88,7 +90,7 @@ fun main(args: Array<String>) {
             ClassName.bestGuess(MapType::class.qualifiedName!!)
                 .parameterizedBy(
                     mapType((dataType as MapType).keyType)!!,
-                    mapType((dataType as MapType).valueType)!!
+                    mapType(dataType.valueType)!!
                 )
         ProtocolConstants.DataType.UDT ->
             ClassName(
@@ -168,15 +170,33 @@ fun main(args: Array<String>) {
 
         type.columns.forEach { (identifier, columnMetadata) ->
             val propertyName = identifier.asInternal().toCamelCase().beginWithLowerCase()
+            val propertySpec = PropertySpec.builder(propertyName, mapType(columnMetadata.type)!!)
+                .initializer(propertyName)
+                .addAnnotation(
+                    AnnotationSpec.builder(CqlName::class)
+                        .addMember("%S", identifier.asInternal())
+                        .build()
+                )
+
+            val pkId = type.partitionKey.indexOf(columnMetadata)
+            if (pkId >= 0) {
+                propertySpec.addAnnotation(
+                    AnnotationSpec.builder(PartitionKey::class)
+                        .addMember("%L", pkId)
+                        .build()
+                )
+            }
+            val ccId = type.clusteringColumns[columnMetadata]
+            if (ccId != null && ccId.ordinal >= 0) {
+                propertySpec.addAnnotation(
+                    AnnotationSpec.builder(ClusteringColumn::class)
+                        .addMember("%L", ccId.ordinal)
+                        .build()
+                )
+            }
+
             typeSpec.addProperty(
-                PropertySpec.builder(propertyName, mapType(columnMetadata.type)!!)
-                    .initializer(propertyName)
-                    .addAnnotation(
-                        AnnotationSpec.builder(CqlName::class)
-                            .addMember("%S", identifier.asInternal())
-                            .build()
-                    )
-                    .build()
+                propertySpec.build()
             )
             constructorSpec.addParameter(propertyName, mapType(columnMetadata.type)!!)
         }
